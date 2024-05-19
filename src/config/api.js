@@ -1,1 +1,1 @@
-export const API_URLS = "http://localhost:8080"
+export const API_URLS = "https://jakarta-api.netlify.app/.netlify/functions/app"
