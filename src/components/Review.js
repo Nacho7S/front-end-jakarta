@@ -1,30 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Review.css";
+import { API_URLS } from "../config/api";
 
 const Review = () => {
-  const [reviews, setReviews] = useState([
-    {
-      name: "Brandon Yung",
-      review:
-        "Websitenya sangat informatif dan berguna untuk orang yang mau bertamasya.",
-      rating: 5,
-      imgSrc: "https://via.placeholder.com/50",
-    },
-    {
-      name: "Windah Limitandy",
-      review:
-        "Website sangat berguna dalam membantu saya memilih tempat wisata.",
-      rating: 5,
-      imgSrc: "https://via.placeholder.com/50",
-    },
-    {
-      name: "Windah Limitandy",
-      review:
-        "Website sangat berguna dalam membantu saya memilih tempat wisata.",
-      rating: 5,
-      imgSrc: "https://via.placeholder.com/50",
-    },
-  ]);
+  const token = localStorage.getItem("t")
+  const [reviews, setReviews] = useState([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -51,14 +31,15 @@ const Review = () => {
     e.preventDefault();
     const newReview = {
       ...formData,
-      imgSrc: "https://via.placeholder.com/50", 
+      imgSrc: "https://via.placeholder.com/50",
     };
-    fetch("https://api.example.com/reviews", {
+    fetch(API_URLS + "/reviews", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'access_token': token
       },
-      body: JSON.stringify(newReview),
+      body: JSON.stringify({ contentId: 1203030, messages: newReview.review }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -68,35 +49,59 @@ const Review = () => {
           review: '',
           rating: 0,
         });
+      }).then(() => {
+        fetchReview()
       })
       .catch((error) => console.error("Error:", error));
   };
-
+  
+  
+  const fetchReview = async () => {
+    try {
+      const response = await fetch(API_URLS + "/reviews", {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'access_token': token
+        },
+      })
+      const dataJson = await  response.json()
+      setReviews(dataJson.data)
+      console.log(dataJson);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    fetchReview()
+  }, [])
+  
   return (
     <section className="reviews">
       <div className="container">
         <h2>Apa Kata Mereka</h2>
         <p>Baca apa yang dikatakan oleh pengunjung kami yang bahagia</p>
         <div className="reviews-grid">
-          {reviews.map((review, index) => (
-            <div key={index} className="review-card">
+          {reviews?.length > 0 ? (
+
+reviews?.map((review, index) => (
+  <div key={index} className="review-card">
               <div className="review-header">
-                <img src={review.imgSrc} alt={review.name} />
+                <img src="https://via.placeholder.com/50" alt={review?.name} />
                 <div>
-                  <h3>{review.name}</h3>
+                  <h3>{review?.user?.name}</h3>
                 </div>
               </div>
               <div className="review-body">
-                <div className="rating">
-                  {"★".repeat(review.rating)}  
-                  {"☆".repeat(5 - review.rating)}
-                </div>
-                <p>{review.review}</p>
+                <p>{review?.comments}</p>
               </div>
             </div>
-          ))}
-        </div>
-        <form onSubmit={submitReview}>
+          ))
+        ): (<h1> reviews currently empty</h1>)}
+          </div>
+        {token ? (
+
+          <form onSubmit={submitReview}>
           <h3>Kumpulkan Masukan Anda</h3>
           <textarea
             name="review"
@@ -104,26 +109,12 @@ const Review = () => {
             value={formData.review}
             onChange={handleChange}
             required
-          />
-          <div className="star-rating">
-            {[5, 4, 3, 2, 1].map((star) => (
-              <React.Fragment key={star}>
-                <input
-                  type="radio"
-                  id={`star${star}`}
-                  name="rating"
-                  value={star}
-                  checked={formData.rating === star}
-                  onChange={() => handleRatingChange(star)}
-                />
-                <label htmlFor={`star${star}`} title={`${star} stars`}>
-                  &#9733;
-                </label>
-              </React.Fragment>
-            ))}
-          </div>
+            />
           <button type="submit">Submit</button>
         </form>
+        ) : (<h1>
+            u must login first
+          </h1>)}
       </div>
     </section>
   );

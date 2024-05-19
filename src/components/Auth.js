@@ -57,7 +57,7 @@ const Auth = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(API_URLS + 'user/register', {
+      const response = await fetch(API_URLS + '/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

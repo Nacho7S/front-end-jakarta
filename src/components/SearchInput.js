@@ -79,8 +79,7 @@ const SearchInput = () => {
             filteredData.map((item) => (
               <div 
                 key={item.index} 
-                className="searchItem" 
-                onClick={() => handleSearchItemClick(item.index)}
+                className="searchItem"
                 style={{ cursor: 'pointer' }}
               >
                 <img src={item.imageUrl} alt={item.name} />

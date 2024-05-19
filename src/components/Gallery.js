@@ -82,7 +82,7 @@ const Gallery = () => {
             <p>{project.category}</p>
             <h3 className="grid__title">{project.title}</h3>
             <div className="grid__overlay">
-              <button className="learnMoreButton" onClick={() => handleLearnMore(project.id)}>
+              <button className="learnMoreButton" onClick={() => handleLearnMore(index + 1)}>
                 Learn More
               </button>
               {hoveredIndex === index && (
