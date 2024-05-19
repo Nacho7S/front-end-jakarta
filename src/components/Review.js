@@ -88,7 +88,7 @@ const Review = () => {
               </div>
               <div className="review-body">
                 <div className="rating">
-                  {"★".repeat(review.rating)}
+                  {"★".repeat(review.rating)}  
                   {"☆".repeat(5 - review.rating)}
                 </div>
                 <p>{review.review}</p>
