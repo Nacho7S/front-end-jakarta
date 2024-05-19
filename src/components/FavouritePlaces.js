@@ -66,7 +66,7 @@ const FavouritePlaces = () => {
     <div className="favourite-places">
       <h2>Favourite Places</h2>
       <ul>
-        {favourites.length > 0 ? (
+        {favourites?.length > 0 ? (
           favourites.map(place => (
             <li key={place?.content?._id}>
             <span>{place?.content?.name}</span>
